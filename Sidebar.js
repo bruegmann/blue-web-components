@@ -43,41 +43,85 @@ class Sidebar extends HTMLElement {
                 </slot>
             </button>
 
-            <slot id="menuItemsSlot"></slot>
+            <slot></slot>
         `
     }
 
-    open_ = false
+    closed_ = false
 
-    get open() {
-        return this.open_
+    get closed() {
+        return this.closed_
     }
 
-    set open(isOpen) {
-        this.open_ = isOpen
+    set closed(closed) {
+        this.closed_ = closed
 
-        if (isOpen === true) {
+        if (closed === true) {
             this.setAttribute("closed", "")
         } else {
             this.removeAttribute("closed")
         }
     }
 
+    dynamicSize_ = null
+
+    get dynamicSize() {
+        return this.dynamicSize_
+    }
+
+    set dynamicSize(dynamicSize_) {
+        const dynamicSize = parseInt(dynamicSize_) || 992
+        this.dynamicSize_ = dynamicSize
+    }
+
     connectedCallback() {
-        this._onClick = this._onClick.bind(this)
+        this.closed = this.getAttribute("closed") !== null
+        this.dynamicSize = this.getAttribute("dynamic-size")
+
         const toggleBtn = this.shadowRoot.getElementById("toggleBtn")
+        this._onClick = this._onClick.bind(this)
         toggleBtn.addEventListener("click", this._onClick)
 
-        this.open = this.getAttribute("closed") !== null
+        if (this.dynamicSize !== null) {
+            this._onResize()
+            this._onResize = this._onResize.bind(this)
+            window.addEventListener("resize", this._onResize)
+        }
+
+        this._onDocumentMouseDown = this._onDocumentMouseDown.bind(this)
+        document.addEventListener("mousedown", this._onDocumentMouseDown)
     }
 
     disconnectedCallback() {
         const toggleBtn = this.shadowRoot.getElementById("toggleBtn")
         toggleBtn.removeEventListener("click", this._onClick)
+
+        if (this.dynamicSize !== null) {
+            window.removeEventListener("resize", this._onResize)
+        }
+
+        document.removeEventListener("mousedown", this._onDocumentMouseDown)
     }
 
     _onClick() {
-        this.open = !this.open
+        this.closed = !this.closed
+    }
+
+    _onResize() {
+        if (window.innerWidth < this.dynamicSize) {
+            this.closed = true
+        } else {
+            this.closed = false
+        }
+    }
+
+    _onDocumentMouseDown(event) {
+        if (!this.contains(event.target)) {
+            // Clicked inside. Should close when dynamic size and on smaller screens.
+            if (window.innerWidth < this.dynamicSize) {
+                this.closed = true
+            }
+        }
     }
 }
 
