@@ -1,0 +1,24 @@
+{
+    "name": "blue-web-components",
+    "version": "1.0.0",
+    "description": "Blue Web Components",
+    "main": "Sidebar.js",
+    "scripts": {
+        "test": "npx --yes http-server . -o"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/bruegmann/blue-web-components.git"
+    },
+    "keywords": [
+        "webcomponents",
+        "library",
+        "javascript"
+    ],
+    "author": "LGK",
+    "license": "LGPL-3.0-or-later",
+    "bugs": {
+        "url": "https://github.com/bruegmann/blue-web-components/issues"
+    },
+    "homepage": "https://github.com/bruegmann/blue-web-components#readme"
+}
