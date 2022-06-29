@@ -26,10 +26,14 @@ class Sidebar extends HTMLElement {
                     cursor: pointer;
                     margin: var(--blue-sidebar-button-margin);
                     padding: var(--blue-sidebar-button-padding);
+                    transition: var(--blue-sidebar-button-transition);
                 }
-                #toggleBtn:hover {
-                    background: var(--blue-sidebar-button-bg-hover, gray);
-                    color: var(--blue-sidebar-button-color-hover, white);
+                
+                @media (hover: hover) {
+                    #toggleBtn:hover {
+                        background: var(--blue-sidebar-button-bg-hover, gray);
+                        color: var(--blue-sidebar-button-color-hover, white);
+                    }
                 }
             </style>
 

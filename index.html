@@ -14,11 +14,12 @@
                     Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
                 margin-top: 4rem;
 
-                --blue-sidebar-bg: #261f31c4;
-                --blue-sidebar-button-bg: #261f31;
-                --blue-sidebar-button-bg-hover: tomato;
+                --blue-sidebar-bg: rgba(38, 31, 49, 0.9);
+                --blue-sidebar-button-bg: transparent;
+                --blue-sidebar-button-bg-hover: rgba(255, 255, 255, 0.7);
                 --blue-sidebar-button-border-radius: 0.5rem;
                 --blue-sidebar-button-margin: 0.25rem;
+                --blue-sidebar-button-transition: background 0.2s;
                 --blue-control-size: calc(3rem - var(--blue-sidebar-button-margin) * 2);
                 --blue-sidebar-width-closed: calc(var(--blue-control-size) + var(--blue-sidebar-button-margin) * 2);
                 --blue-sidebar-transition: width 0.5s ease-in-out;
@@ -26,14 +27,17 @@
 
             /* Make sidebar overlay over content on smaller screens */
             @media (max-width: 992px) {
-                #styled blue-sidebar:not([closed]) {
+                #styled blue-sidebar {
                     position: absolute;
                     top: 0;
                     bottom: 0;
+                }
+
+                #styled blue-sidebar:not([closed]) {
                     box-shadow: 1rem 0.5rem 1rem rgba(0, 0, 0, 0.267);
                 }
 
-                #styled blue-sidebar:not([closed]) + .content {
+                #styled blue-sidebar + .content {
                     margin-left: var(--blue-sidebar-width-closed);
                 }
             }
@@ -73,7 +77,22 @@
 
             <div class="site">
                 <blue-sidebar dynamic-size>
-                    <span slot="icon">MENU</span>
+                    <span slot="icon"
+                        ><svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            class="bi bi-layout-text-sidebar"
+                            viewBox="0 0 16 16"
+                        >
+                            <path
+                                d="M3.5 3a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM3 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5z"
+                            />
+                            <path
+                                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm12-1v14h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zm-1 0H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h9V1z"
+                            /></svg
+                    ></span>
 
                     <a href="#">Hi</a>
                 </blue-sidebar>
