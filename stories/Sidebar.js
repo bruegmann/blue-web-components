@@ -49,48 +49,59 @@ export class Sidebar extends HTMLElement {
 
             <slot></slot>
         `
+
+        this.close = this.close.bind(this)
+        this.open = this.open.bind(this)
+        this.toggle = this.toggle.bind(this)
+        this.getDynamicSize = this.getDynamicSize.bind(this)
     }
 
-    closed_ = false
-
-    get closed() {
-        return this.closed_
+    close() {
+        this.setAttribute("closed", "")
     }
 
-    set closed(closed) {
-        this.closed_ = closed
+    open() {
+        this.removeAttribute("closed")
+    }
 
-        if (closed === true) {
-            this.setAttribute("closed", "")
+    toggle() {
+        if (this.getAttribute("closed") !== null) {
+            this.open()
         } else {
-            this.removeAttribute("closed")
+            this.close()
         }
     }
 
-    dynamicSize_ = null
-
-    get dynamicSize() {
-        return this.dynamicSize_
+    getDynamicSize() {
+        const attr = this.getAttribute("dynamic-size")
+        if (attr === "") return 992
+        if (attr === null) return null
+        return parseInt(attr)
     }
 
-    set dynamicSize(dynamicSize_) {
-        const dynamicSize = parseInt(dynamicSize_) || 992
-        this.dynamicSize_ = dynamicSize
-    }
+    // static get observedAttributes() {
+    //     return ["closed", "dynamic-size"]
+    // }
+
+    // attributeChangedCallback(name, oldValue, newValue) {
+    //     if (oldValue === newValue) return
+    //     // if (name === "closed") this.closed = newValue !== null
+    //     // if (name === "dynamic-size") this.dynamicSize = newValue
+    //     // this.render()
+    // }
 
     connectedCallback() {
-        this.closed = this.getAttribute("closed") !== null
-        this.dynamicSize = this.getAttribute("dynamic-size")
+        // this.dynamicSize = this.getAttribute("dynamic-size")
 
         const toggleBtn = this.shadowRoot.getElementById("toggleBtn")
         this._onClick = this._onClick.bind(this)
         toggleBtn.addEventListener("click", this._onClick)
 
-        if (this.dynamicSize !== null) {
-            this._onResize()
-            this._onResize = this._onResize.bind(this)
-            window.addEventListener("resize", this._onResize)
-        }
+        // if (this.dynamicSize !== null) {
+        this._onResize()
+        this._onResize = this._onResize.bind(this)
+        window.addEventListener("resize", this._onResize)
+        // }
 
         this._onDocumentMouseDown = this._onDocumentMouseDown.bind(this)
         document.addEventListener("mousedown", this._onDocumentMouseDown)
@@ -100,30 +111,34 @@ export class Sidebar extends HTMLElement {
         const toggleBtn = this.shadowRoot.getElementById("toggleBtn")
         toggleBtn.removeEventListener("click", this._onClick)
 
-        if (this.dynamicSize !== null) {
-            window.removeEventListener("resize", this._onResize)
-        }
+        // if (this.dynamicSize !== null) {
+        window.removeEventListener("resize", this._onResize)
+        // }
 
         document.removeEventListener("mousedown", this._onDocumentMouseDown)
     }
 
     _onClick() {
-        this.closed = !this.closed
+        this.toggle()
     }
 
     _onResize() {
-        if (window.innerWidth < this.dynamicSize) {
-            this.closed = true
-        } else {
-            this.closed = false
+        const dynamicSize = this.getDynamicSize()
+        if (dynamicSize !== null) {
+            if (window.innerWidth < dynamicSize) {
+                this.close()
+            } else {
+                this.open()
+            }
         }
     }
 
     _onDocumentMouseDown(event) {
-        if (!this.contains(event.target)) {
+        const dynamicSize = this.getDynamicSize()
+        if (!this.contains(event.target) && dynamicSize !== null) {
             // Clicked inside. Should close when dynamic size and on smaller screens.
-            if (window.innerWidth < this.dynamicSize) {
-                this.closed = true
+            if (window.innerWidth < dynamicSize) {
+                this.close()
             }
         }
     }
