@@ -1,8 +1,6 @@
 # Blue Web Components
 
-Live: https://bruegmann.github.io/blue-web-components/
-
-Right now this repo is a playground to get experience with creating Web Components.\
+Right now this repo is a playground to get experience with creating Web Components.<br/>
 [What are Web Components?](https://developer.mozilla.org/en-US/docs/Web/Web_Components)
 
 Goal is to make the components simple, independent and flexible to use.
@@ -22,8 +20,8 @@ npm i github:bruegmann/blue-web-components
 Import it in your code:
 
 ```js
-import { Sidebar } from "blue-web-components/Sidebar.js"
-import "blue-web-components/Sidebar.js"
+import { Sidebar } from "blue-web-components/packages/sidebar/Sidebar.js"
+import "blue-web-components/packages/sidebar/Sidebar.js"
 ```
 
 In a React app with TypeScript import it and declare it once globally:
@@ -32,8 +30,8 @@ In a React app with TypeScript import it and declare it once globally:
 import { DOMAttributes } from "react"
 
 // @ts-ignore
-import { Sidebar } from "blue-web-components/Sidebar.js"
-import "blue-web-components/Sidebar.js"
+import { Sidebar } from "blue-web-components/packages/sidebar/Sidebar.js"
+import "blue-web-components/packages/sidebar/Sidebar.js"
 
 type CustomElement<T> = Partial<T & DOMAttributes<T> & { children: any }>
 
@@ -49,7 +47,10 @@ declare global {
 ### Embedding directly to HTML
 
 ```html
-<script type="module" src="https://bruegmann.github.io/blue-web-components/Sidebar.js"></script>
+<script
+    type="module"
+    src="https://raw.githubusercontent.com/bruegmann/blue-web-components/main/packages/sidebar/Sidebar.js"
+></script>
 ```
 
 ### Use a Blue Web Component
