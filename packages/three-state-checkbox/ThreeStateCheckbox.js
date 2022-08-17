@@ -8,8 +8,13 @@ export class ThreeStateCheckbox extends HTMLElement {
     }
 
     set checked(_checked) {
+        const oldChecked = this._checked
         this._checked = _checked
         this._updateDom()
+
+        if (oldChecked !== _checked) {
+            this.dispatchEvent(this.changeEvent)
+        }
     }
 
     constructor() {
@@ -42,9 +47,17 @@ export class ThreeStateCheckbox extends HTMLElement {
             }
         })
         this.checked = getChecked(this)
+
+        this.changeEvent = new CustomEvent("change", {
+            bubbles: true,
+            cancelable: false,
+            composed: true,
+            detail: () => this.checked
+        })
     }
 
     connectedCallback() {
+        this.checked = getChecked(this)
         this._observe()
     }
 

@@ -2,7 +2,9 @@
     "name": "blue-web-components",
     "version": "1.0.0",
     "description": "Blue Web Components",
-    "main": "Sidebar.js",
+    "files": [
+        "packages"
+    ],
     "scripts": {
         "test": "npx --yes http-server . -o",
         "storybook": "start-storybook -p 6006",
