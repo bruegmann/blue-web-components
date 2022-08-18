@@ -41,6 +41,12 @@ export default {
             control: {
                 type: "boolean"
             }
+        },
+        change: {
+            name: "change",
+            type: { name: "event", required: false },
+            description:
+                "**Event** - Fires when the value of `checked` changes. [How to handle events in React](https://www.robinwieruch.de/react-web-components/)"
         }
     }
 }
@@ -60,14 +66,13 @@ const Template = (args) => {
     }
 
     el.addEventListener("click", () => console.log("click!"))
-    el.addEventListener("change", (ev) => {
+    el.addEventListener("change", (event) => {
         console.log("change event listener")
-        console.log({ checked: ev.target._checked })
+        console.log(event)
     })
 
-    el.onchange = (ev) => {
-        console.log("onchange property")
-        console.log({ checked: ev.target._checked })
+    el.onchange = ({ target }) => {
+        console.log({ checked: target.checked })
     }
 
     return el
@@ -79,6 +84,13 @@ const AdvancedTemplate = (args) => {
     const el = document.createElement("div")
 
     el.innerHTML = /*html*/ `
+        <style>
+            #myCheckbox {
+                --blue-three-state-checkbox-color: white;
+                --blue-three-state-checkbox-bg: blue;
+                --blue-three-state-checkbox-border-bg: black;
+            }
+        </style>
         <blue-three-state-checkbox id="myCheckbox" checked></blue-three-state-checkbox>
         <label for="myCheckbox">Click</label>
     `
@@ -87,3 +99,23 @@ const AdvancedTemplate = (args) => {
 }
 
 export const WithLabel = AdvancedTemplate.bind({})
+
+const ReactivityTemplate = (args) => {
+    const el = Template(args)
+
+    el.id = "myReactiveCheckbox"
+
+    const container = document.createElement("div")
+    container.appendChild(el)
+
+    const btn = document.createElement("button")
+    btn.innerText = "Toggle readonly"
+    btn.onclick = () => {
+        el.setAttribute("readonly", "")
+    }
+    container.appendChild(btn)
+
+    return container
+}
+
+export const Reactivity = ReactivityTemplate.bind({})

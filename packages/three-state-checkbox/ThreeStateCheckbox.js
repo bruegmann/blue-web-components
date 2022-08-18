@@ -1,19 +1,19 @@
 export class ThreeStateCheckbox extends HTMLElement {
-    _observer
+    #observer
 
-    _checked = null // null | true | false
+    #checked = null // null | true | false
 
     get checked() {
-        return this._checked
+        return this.#checked
     }
 
     set checked(_checked) {
-        const oldChecked = this._checked
-        this._checked = _checked
-        this._updateDom()
+        const oldChecked = this.#checked
+        this.#checked = _checked
+        this.#updateDom()
 
         if (oldChecked !== _checked) {
-            this.dispatchEvent(this.changeEvent)
+            this.dispatchEvent(new Event("change", { bubbles: true }))
         }
     }
 
@@ -32,10 +32,23 @@ export class ThreeStateCheckbox extends HTMLElement {
                     all: unset;
 	                outline: revert;
                 }
+
+                #svg {
+                    fill: var(--blue-three-state-checkbox-color, currentColor);
+                }
+
+                #diamond-bg {
+                    fill: var(--blue-three-state-checkbox-bg, transparent);
+                }
+
+                #diamond {
+                    fill: var(--blue-three-state-checkbox-border-bg, var(--blue-three-state-checkbox-color, currentColor));
+                }
             </style>
             
             <button>
-                <svg id="svg" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-diamond" viewBox="0 0 16 16">
+                <svg id="svg" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" class="bi bi-diamond" viewBox="0 0 16 16">
+                    <path id="diamond-bg" fill-rule="evenodd" d="M6.95.435c.58-.58 1.52-.58 2.1 0l6.515 6.516c.58.58.58 1.519 0 2.098L9.05 15.565c-.58.58-1.519.58-2.098 0L.435 9.05a1.482 1.482 0 0 1 0-2.098L6.95.435z"/>
                     <path id="diamond" d="M6.95.435c.58-.58 1.52-.58 2.1 0l6.515 6.516c.58.58.58 1.519 0 2.098L9.05 15.565c-.58.58-1.519.58-2.098 0L.435 9.05a1.482 1.482 0 0 1 0-2.098L6.95.435zm1.4.7a.495.495 0 0 0-.7 0L1.134 7.65a.495.495 0 0 0 0 .7l6.516 6.516a.495.495 0 0 0 .7 0l6.516-6.516a.495.495 0 0 0 0-.7L8.35 1.134z"/>
                 </svg>
             </button>
@@ -47,21 +60,14 @@ export class ThreeStateCheckbox extends HTMLElement {
             }
         })
         this.checked = getChecked(this)
-
-        this.changeEvent = new CustomEvent("change", {
-            bubbles: true,
-            cancelable: false,
-            composed: true,
-            detail: () => this.checked
-        })
     }
 
     connectedCallback() {
         this.checked = getChecked(this)
-        this._observe()
+        this.#observe()
     }
 
-    _updateDom() {
+    #updateDom() {
         const plus = this.shadowRoot.getElementById("plus")
         const minus = this.shadowRoot.getElementById("minus")
         if (plus) plus.remove()
@@ -88,14 +94,14 @@ export class ThreeStateCheckbox extends HTMLElement {
         }
     }
 
-    _observe() {
-        this._observer =
-            this._observer ||
+    #observe() {
+        this.#observer =
+            this.#observer ||
             new MutationObserver(() => {
                 this.checked = getChecked(this)
             })
 
-        this._observer.observe(this, {
+        this.#observer.observe(this, {
             attributeFilter: ["checked"],
             attributeOldValue: true,
             childList: true,
@@ -103,15 +109,15 @@ export class ThreeStateCheckbox extends HTMLElement {
         })
     }
 
-    _unobserve() {
-        if (this._observer) {
-            this._observer.takeRecords()
-            this._observer.disconnect()
+    #unobserve() {
+        if (this.#observer) {
+            this.#observer.takeRecords()
+            this.#observer.disconnect()
         }
     }
 
     disconnectedCallback() {
-        this._unobserve()
+        this.#unobserve()
     }
 
     static get formAssociated() {
