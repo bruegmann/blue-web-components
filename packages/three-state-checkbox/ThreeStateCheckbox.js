@@ -44,6 +44,36 @@ export class ThreeStateCheckbox extends HTMLElement {
                 #diamond {
                     fill: var(--blue-three-state-checkbox-border-bg, var(--blue-three-state-checkbox-color, currentColor));
                 }
+
+                .checked #svg {
+                    fill: var(--blue-three-state-checkbox-color-checked, var(--blue-three-state-checkbox-color, currentColor));
+                }
+                .checked #diamond-bg {
+                    fill: var(--blue-three-state-checkbox-bg-checked, var(--blue-three-state-checkbox-bg, transparent));
+                }
+                .checked #diamond {
+                    fill: var(--blue-three-state-checkbox-border-bg-checked, var(--blue-three-state-checkbox-border-bg, var(--blue-three-state-checkbox-color, currentColor)));
+                }
+
+                .checked-true #svg {
+                    fill: var(--blue-three-state-checkbox-color-checked-true, var(--blue-three-state-checkbox-color-checked, var(--blue-three-state-checkbox-color, currentColor)));
+                }
+                .checked-true #diamond-bg {
+                    fill: var(--blue-three-state-checkbox-bg-checked-true, var(--blue-three-state-checkbox-bg-checked, var(--blue-three-state-checkbox-bg, transparent)));
+                }
+                .checked-true #diamond {
+                    fill: var(--blue-three-state-checkbox-border-bg-checked-true, var(--blue-three-state-checkbox-border-bg-checked, var(--blue-three-state-checkbox-border-bg, var(--blue-three-state-checkbox-color, currentColor))));
+                }
+
+                .checked-false #svg {
+                    fill: var(--blue-three-state-checkbox-color-checked-false, var(--blue-three-state-checkbox-color-checked, var(--blue-three-state-checkbox-color, currentColor)));
+                }
+                .checked-false #diamond-bg {
+                    fill: var(--blue-three-state-checkbox-bg-checked-false, var(--blue-three-state-checkbox-bg-checked, var(--blue-three-state-checkbox-bg, transparent)));
+                }
+                .checked-false #diamond {
+                    fill: var(--blue-three-state-checkbox-border-bg-checked-false, var(--blue-three-state-checkbox-border-bg-checked, var(--blue-three-state-checkbox-border-bg, var(--blue-three-state-checkbox-color, currentColor))));
+                }
             </style>
             
             <button>
@@ -68,6 +98,9 @@ export class ThreeStateCheckbox extends HTMLElement {
     }
 
     #updateDom() {
+        const button = this.shadowRoot.querySelector("button")
+        button.removeAttribute("class")
+
         const plus = this.shadowRoot.getElementById("plus")
         const minus = this.shadowRoot.getElementById("minus")
         if (plus) plus.remove()
@@ -84,6 +117,7 @@ export class ThreeStateCheckbox extends HTMLElement {
                 "M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
             )
             svg.appendChild(path)
+            button.setAttribute("class", "checked checked-true")
         }
 
         if (this.checked === false) {
@@ -91,6 +125,7 @@ export class ThreeStateCheckbox extends HTMLElement {
             path.setAttributeNS(null, "id", "minus")
             path.setAttributeNS(null, "d", "M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z")
             svg.appendChild(path)
+            button.setAttribute("class", "checked checked-false")
         }
     }
 

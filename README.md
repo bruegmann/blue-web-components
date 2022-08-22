@@ -1,6 +1,8 @@
 # Blue Web Components
 
-Right now this repo is a playground to get experience with creating Web Components.<br/>
+[![npm version](https://img.shields.io/npm/v/blue-web-components)](https://www.npmjs.com/package/blue-web-components)
+
+This library provides different kind of Web Components.<br/>
 [What are Web Components?](https://developer.mozilla.org/en-US/docs/Web/Web_Components)
 
 Goal is to make the components simple, independent and flexible to use.
@@ -10,6 +12,12 @@ If you are using React, [Blue React](https://bruegmann.github.io/blue-react) mig
 ## Usage
 
 ### Install as NPM package
+
+Install from NPM:
+
+```
+npm i blue-web-components
+```
 
 Install from GitHub repository:
 
@@ -24,6 +32,7 @@ import { Sidebar } from "blue-web-components/packages/sidebar/Sidebar.js"
 import "blue-web-components/packages/sidebar/Sidebar.js"
 ```
 
+TypeScript support is not all that great yet, but you can declare it anyway.
 In a React app with TypeScript import it and declare it once globally:
 
 ```tsx
@@ -59,7 +68,7 @@ declare global {
 <blue-sidebar></blue-sidebar>
 ```
 
-Web Component support different attributes. Take a look at the source code and search for "`getAttribute`" to find out which can be used.
+Web Components support different attributes, properties and events. Take a look at the [docs](https://bruegmann.github.io/blue-web-components/) to find out more.
 
 ## Styling
 
@@ -70,5 +79,7 @@ By default the Web Components have pretty basic styling. You can customize it us
 Use this command to run the site on a simple web server:
 
 ```
-npx --yes http-server . -o
+npm start
 ```
+
+This will start [Storybook](https://storybook.js.org/).

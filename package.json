@@ -1,6 +1,6 @@
 {
     "name": "blue-web-components",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Blue Web Components",
     "files": [
         "packages"
@@ -8,7 +8,8 @@
     "scripts": {
         "test": "npx --yes http-server . -o",
         "storybook": "start-storybook -p 6006",
-        "build-storybook": "build-storybook --output-dir ./docs"
+        "build-storybook": "build-storybook --output-dir ./docs",
+        "start": "npm run storybook"
     },
     "repository": {
         "type": "git",

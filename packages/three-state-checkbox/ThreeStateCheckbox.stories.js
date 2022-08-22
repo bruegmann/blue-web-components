@@ -85,37 +85,42 @@ const AdvancedTemplate = (args) => {
 
     el.innerHTML = /*html*/ `
         <style>
+            body {
+                color: #333;
+                font-weight: bold;
+            }
+
             #myCheckbox {
-                --blue-three-state-checkbox-color: white;
-                --blue-three-state-checkbox-bg: blue;
-                --blue-three-state-checkbox-border-bg: black;
+                --blue-three-state-checkbox-color-checked: yellowgreen;
+                --blue-three-state-checkbox-bg-checked: currentColor;
+                --blue-three-state-checkbox-border-bg-checked: currentColor;
+            }
+
+            #myCheckbox2 {
+                --blue-three-state-checkbox-color-checked: white;
+
+                --blue-three-state-checkbox-bg-checked-true: yellowgreen;
+                --blue-three-state-checkbox-border-bg-checked-true: yellowgreen;
+                --blue-three-state-checkbox-bg-checked-false: tomato;
+                --blue-three-state-checkbox-border-bg-checked-false: tomato;
             }
         </style>
         <blue-three-state-checkbox id="myCheckbox" checked></blue-three-state-checkbox>
-        <label for="myCheckbox">Click</label>
+        <label for="myCheckbox">Fill when checked</label>
+        <br>
+        
+        <blue-three-state-checkbox id="myCheckbox2" checked></blue-three-state-checkbox>
+        <label for="myCheckbox2">Fill depending on checked true or false</label>
     `
 
     return el
 }
 
-export const WithLabel = AdvancedTemplate.bind({})
-
-const ReactivityTemplate = (args) => {
-    const el = Template(args)
-
-    el.id = "myReactiveCheckbox"
-
-    const container = document.createElement("div")
-    container.appendChild(el)
-
-    const btn = document.createElement("button")
-    btn.innerText = "Toggle readonly"
-    btn.onclick = () => {
-        el.setAttribute("readonly", "")
+export const WithLabelAndCustomStyle = AdvancedTemplate.bind({})
+WithLabelAndCustomStyle.parameters = {
+    docs: {
+        description: {
+            story: "Styled with CSS variables, so the control will have dark background when checked."
+        }
     }
-    container.appendChild(btn)
-
-    return container
 }
-
-export const Reactivity = ReactivityTemplate.bind({})
