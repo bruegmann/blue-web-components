@@ -83,3 +83,19 @@ npm start
 ```
 
 This will start [Storybook](https://storybook.js.org/).
+
+## Contributing
+
+1. Fork it!
+2. Create your feature branch: `git checkout -b my-new-feature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin my-new-feature`
+5. Submit a pull request :D
+
+## Credits
+
+-   SVG code for [ThreeStateCheckbox](https://bruegmann.github.io/blue-web-components/?path=/docs/threestatecheckbox--unstyled) by [Bootstrap Icons](https://icons.getbootstrap.com/)
+
+## License
+
+[GNU General Public License v3.0](https://github.com/bruegmann/blue-web-components/blob/main/LICENSE)

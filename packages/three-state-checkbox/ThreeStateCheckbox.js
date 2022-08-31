@@ -85,7 +85,7 @@ export class ThreeStateCheckbox extends HTMLElement {
         `
 
         this.addEventListener("click", () => {
-            if (!this.hasAttribute("readonly")) {
+            if (!this.hasAttribute("readonly") && !this.hasAttribute("disabled")) {
                 this.checked = this.checked === true ? false : this.checked === false ? null : true
             }
         })
