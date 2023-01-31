@@ -12,10 +12,10 @@ export class InputSplitted extends HTMLElement {
         this.#shadow = _shadow
 
         if (this.shadow === true) {
-            this.attachShadow({ mode: "open", delegatesFocus: true })
-            this.shadowRoot.innerHTML = ""
+            if (!this.shadowRoot) this.attachShadow({ mode: "open", delegatesFocus: true })
+            this.shadowRoot.innerHTML = this.#styling
         } else {
-            this.innerHTML = ""
+            this.innerHTML = this.#styling
         }
 
         this.#initDom()
@@ -77,6 +77,20 @@ export class InputSplitted extends HTMLElement {
         }
     }
 
+    #styling = /* html */ `<style>
+    input {
+        display: var(--blue-input-splitted-display, revert);
+        background-color: var(--blue-input-splitted-background-color, revert);
+        border: var(--blue-input-splitted-border, revert);
+        border-radius: var(--blue-input-splitted-border-radius, revert);
+        color: var(--blue-input-splitted-color, revert);
+        margin: var(--blue-input-splitted-margin, revert);
+        padding: var(--blue-input-splitted-padding, revert);
+        text-align: var(--blue-input-splitted-text-align, revert);
+        width: var(--blue-input-splitted-width, revert);
+    }
+</style>`
+
     constructor() {
         super()
 
@@ -85,6 +99,12 @@ export class InputSplitted extends HTMLElement {
 
     connectedCallback() {
         this.#initDom()
+
+        this.value = this.getAttribute("value") || this.value
+        this.length = getLength(this)
+        this.controlClass = this.getAttribute("control-class") || this.controlClass
+        this.shadow = this.getAttribute("shadow") !== null
+
         // this.checked = getChecked(this)
         this.#observe()
     }
@@ -118,8 +138,8 @@ export class InputSplitted extends HTMLElement {
         this.value = this.getAttribute("value") || ""
         this.length = getLength(this)
 
-        if (this.shadow) this.shadowRoot.innerHTML = ""
-        else this.innerHTML = ""
+        if (this.shadow) this.shadowRoot.innerHTML = this.#styling
+        else this.innerHTML = this.#styling
 
         this.#valueArray = this.value.split("")
 
@@ -147,11 +167,15 @@ export class InputSplitted extends HTMLElement {
                     if (m.attributeName === "control-class") {
                         this.controlClass = this.getAttribute("control-class") || this.controlClass
                     }
+
+                    if (m.attributeName === "shadow") {
+                        this.shadow = this.getAttribute("shadow") !== null
+                    }
                 })
             })
 
         this.#observer.observe(this, {
-            attributeFilter: ["value", "length", "control-class"],
+            attributeFilter: ["value", "length", "control-class", "shadow"],
             attributeOldValue: true,
             childList: true,
             subtree: true

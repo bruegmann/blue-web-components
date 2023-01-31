@@ -1,7 +1,7 @@
 import { InputSplitted } from "./InputSplitted"
 import "./InputSplitted"
 
-export default {
+const story = {
     title: "InputSplitted",
     parameters: {
         docs: {
@@ -51,7 +51,8 @@ export default {
         controlClass: {
             name: "control-class",
             type: { name: "string", required: false },
-            description: "",
+            description:
+                "Class name will passed to the input elements. Make sure `shadow` isn't enabled if you want to use this for styling.",
             table: {
                 type: { summary: "string" },
                 defaultValue: { summary: "" }
@@ -63,11 +64,42 @@ export default {
     }
 }
 
+const cssProperties = [
+    "display",
+    "background-color",
+    "border",
+    "border-radius",
+    "color",
+    "margin",
+    "padding",
+    "text-align",
+    "width"
+]
+for (const p of cssProperties) {
+    story.argTypes[`--${story.component}-${p}`] = {
+        name: `--${story.component}-${p}`,
+        type: { name: "string", required: false },
+        description: "CSS Variable / Custom Property",
+        table: {
+            type: { summary: "string" },
+            defaultValue: { summary: "" }
+        },
+        control: {
+            type: "text"
+        }
+    }
+}
+
+export default story
+
 export const Unstyled = ((args) => {
     const el = new InputSplitted()
 
     for (const a in args) {
-        if (args[a] === true) {
+        if (a.startsWith("--")) {
+            console.log("is CSS custom property")
+            el.style.setProperty(a, args[a])
+        } else if (args[a] === true) {
             el.setAttribute(a, "")
         } else if (args[a] === false) {
             el.removeAttribute(a)
@@ -162,6 +194,39 @@ Reactive.parameters = {
     docs: {
         description: {
             story: "Reactive changes while the application is running."
+        }
+    }
+}
+
+export const StylingWithCSSVariables = (() => {
+    const wrapper = document.createElement("div")
+    wrapper.id = "StylingWithCssVariables"
+
+    wrapper.innerHTML = /*html*/ `<style>
+        #${wrapper.id} input {
+            border-color: red !important;
+        }
+        </style><p>If the input elements are bordered red, shadow is open.</p>`
+
+    const el = new InputSplitted()
+    el.setAttribute("shadow", "")
+    el.setAttribute("length", "4")
+    el.style.setProperty("--blue-input-splitted-border", "2px solid gray")
+    el.style.setProperty("--blue-input-splitted-border-radius", "2em")
+    el.style.setProperty("--blue-input-splitted-margin", "0 10px")
+    el.style.setProperty("--blue-input-splitted-padding", "1rem")
+    el.style.setProperty("--blue-input-splitted-text-align", "center")
+    el.style.setProperty("--blue-input-splitted-width", "2em")
+
+    wrapper.appendChild(el)
+
+    return wrapper
+}).bind({})
+
+StylingWithCSSVariables.parameters = {
+    docs: {
+        description: {
+            story: "When `shadow` is enabled, you can still use CSS variables to style the input elements."
         }
     }
 }
