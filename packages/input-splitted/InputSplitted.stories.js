@@ -202,29 +202,49 @@ export const StylingWithCSSVariables = (() => {
     const wrapper = document.createElement("div")
     wrapper.id = "StylingWithCssVariables"
 
-    wrapper.innerHTML = /*html*/ `<style>
-        #${wrapper.id} input {
-            border-color: red !important;
-        }
-        </style><p>If the input elements are bordered red, shadow is open.</p>`
+    wrapper.innerHTML = /*html*/ `
+<style>
+    #${wrapper.id} blue-input-splitted {
+        --blue-input-splitted-border: 2px solid gray;
+        --blue-input-splitted-border-radius: 2em;
+        --blue-input-splitted-margin: 0 10px;
+        --blue-input-splitted-padding: 1rem;
+        --blue-input-splitted-text-align: center;
+        --blue-input-splitted-width: 2em;
+    }
+
+    #${wrapper.id} blue-input-splitted:hover {
+        --blue-input-splitted-background-color: #f2f2f2;
+    }
+
+    #${wrapper.id} blue-input-splitted:focus {
+        --blue-input-splitted-background-color: #f4f4f4;
+    }
+
+    /* If the input elements are bordered red, shadow is open. */
+    #${wrapper.id} input {
+        border-color: red !important;
+    }
+</style>
+
+`
 
     const el = new InputSplitted()
     el.setAttribute("shadow", "")
     el.setAttribute("length", "4")
-    el.style.setProperty("--blue-input-splitted-border", "2px solid gray")
-    el.style.setProperty("--blue-input-splitted-border-radius", "2em")
-    el.style.setProperty("--blue-input-splitted-margin", "0 10px")
-    el.style.setProperty("--blue-input-splitted-padding", "1rem")
-    el.style.setProperty("--blue-input-splitted-text-align", "center")
-    el.style.setProperty("--blue-input-splitted-width", "2em")
 
     wrapper.appendChild(el)
+
+    wrapper.innerHTML += "\n"
 
     return wrapper
 }).bind({})
 
 StylingWithCSSVariables.parameters = {
     docs: {
+        source: {
+            state: "open"
+        },
         description: {
             story: "When `shadow` is enabled, you can still use CSS variables to style the input elements."
         }
