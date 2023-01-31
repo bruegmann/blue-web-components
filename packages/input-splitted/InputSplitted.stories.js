@@ -8,10 +8,14 @@ const story = {
             description: {
                 component: "Group of input fields. Perfect e.g. for entering PIN or TOTP."
             }
+        },
+        actions: {
+            handles: ["changeValue", "focus"]
         }
     },
     component: "blue-input-splitted",
     argTypes: {
+        changeValue: { action: "changeValue", description: "Event that will be fired when the value changes." },
         shadow: {
             name: "shadow",
             type: { name: "boolean", required: false },
@@ -53,6 +57,19 @@ const story = {
             type: { name: "string", required: false },
             description:
                 "Class name will passed to the input elements. Make sure `shadow` isn't enabled if you want to use this for styling.",
+            table: {
+                type: { summary: "string" },
+                defaultValue: { summary: "" }
+            },
+            control: {
+                type: "text"
+            }
+        },
+        control1Id: {
+            name: "control-1-id",
+            type: { name: "string", required: false },
+            description:
+                'ID will passed to the first input element. Allows you to use `<label for="your-control-1-id">`. Only necessary when not using `shadow`.',
             table: {
                 type: { summary: "string" },
                 defaultValue: { summary: "" }
@@ -152,6 +169,10 @@ export const Reactive = ((args) => {
         el[a] = args[a]
     }
 
+    el.addEventListener("changeValue", ({ detail }) => {
+        console.log(detail)
+    })
+
     wrapper.appendChild(el)
 
     wrapper.appendChild(document.createElement("br"))
@@ -226,7 +247,6 @@ export const StylingWithCSSVariables = (() => {
         border-color: red !important;
     }
 </style>
-
 `
 
     const el = new InputSplitted()
@@ -247,6 +267,46 @@ StylingWithCSSVariables.parameters = {
         },
         description: {
             story: "When `shadow` is enabled, you can still use CSS variables to style the input elements."
+        }
+    }
+}
+
+export const UseLabelWithoutShadow = (() => {
+    const wrapper = document.createElement("div")
+    wrapper.innerHTML = /*html*/ `
+    <label for="my-pin-input">Enter a PIN</label>
+    <blue-input-splitted control-1-id="my-pin-input" length="4"></blue-input-splitted>
+`
+    return wrapper
+}).bind({})
+
+UseLabelWithoutShadow.parameters = {
+    docs: {
+        source: {
+            state: "open"
+        },
+        description: {
+            story: ""
+        }
+    }
+}
+
+export const UseLabelWithShadow = (() => {
+    const wrapper = document.createElement("div")
+    wrapper.innerHTML = /*html*/ `
+    <label for="my-pin-input-1">Enter a PIN</label>
+    <blue-input-splitted shadow id="my-pin-input-1" length="4"></blue-input-splitted>
+`
+    return wrapper
+}).bind({})
+
+UseLabelWithShadow.parameters = {
+    docs: {
+        source: {
+            state: "open"
+        },
+        description: {
+            story: ""
         }
     }
 }

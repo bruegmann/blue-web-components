@@ -27,11 +27,16 @@ export class InputSplitted extends HTMLElement {
     }
 
     set value(_value) {
+        const oldValue = this.#value
         this.#value = _value
 
         this.#valueArray = this.value.split("")
         for (let i = 0; i < this.length; i++) {
             if (this.#refArray[i]) this.#refArray[i].value = this.#valueArray[i] || ""
+        }
+
+        if (oldValue !== _value) {
+            this.dispatchEvent(new CustomEvent("changeValue", { bubbles: true, detail: _value }))
         }
     }
 
@@ -77,6 +82,18 @@ export class InputSplitted extends HTMLElement {
         }
     }
 
+    #control1Id = ""
+    get control1Id() {
+        return this.#control1Id
+    }
+    set control1Id(value) {
+        this.#control1Id = value
+
+        if (this.#refArray[0]) {
+            this.#refArray[0].id = this.control1Id
+        }
+    }
+
     #styling = /* html */ `<style>
     input {
         display: var(--blue-input-splitted-display, revert);
@@ -95,6 +112,7 @@ export class InputSplitted extends HTMLElement {
         super()
 
         // this.attachShadow({ mode: "open", delegatesFocus: true })
+        this.onFocus = this.onFocus.bind(this)
     }
 
     connectedCallback() {
@@ -103,6 +121,7 @@ export class InputSplitted extends HTMLElement {
         this.value = this.getAttribute("value") || this.value
         this.length = getLength(this)
         this.controlClass = this.getAttribute("control-class") || this.controlClass
+        this.control1Id = this.getAttribute("control-1-id") || this.control1Id
         this.shadow = this.getAttribute("shadow") !== null
 
         // this.checked = getChecked(this)
@@ -115,6 +134,9 @@ export class InputSplitted extends HTMLElement {
 
         input.type = "text"
         input.className = this.controlClass
+        if (i === 0) {
+            input.id = this.control1Id
+        }
         input.maxLength = 1
         input.value = this.#valueArray[i] || ""
         input.addEventListener("input", ({ target }) => {
@@ -129,17 +151,39 @@ export class InputSplitted extends HTMLElement {
                 this.#refArray[i - 1].focus()
             }
         })
+        input.addEventListener("paste", ({ clipboardData }) => {
+            const pastedData = clipboardData.getData("Text")
+
+            let k = 0
+            for (let j = i; j < this.length; j++) {
+                this.#valueArray[j] = pastedData.split("")[k]
+                this.#refArray[j].focus()
+                k = k + 1
+            }
+
+            this.value = this.#valueArray.join("")
+        })
 
         if (this.shadow) this.shadowRoot.appendChild(input)
         else this.appendChild(input)
+    }
+
+    onFocus() {
+        if (this.#refArray[0]) this.#refArray[0].focus()
     }
 
     #initDom() {
         this.value = this.getAttribute("value") || ""
         this.length = getLength(this)
 
-        if (this.shadow) this.shadowRoot.innerHTML = this.#styling
-        else this.innerHTML = this.#styling
+        if (this.shadow) {
+            this.shadowRoot.innerHTML = this.#styling
+
+            this.shadowRoot.addEventListener("focus", this.onFocus)
+        } else {
+            this.innerHTML = this.#styling
+            this.addEventListener("focus", this.onFocus)
+        }
 
         this.#valueArray = this.value.split("")
 
@@ -168,6 +212,10 @@ export class InputSplitted extends HTMLElement {
                         this.controlClass = this.getAttribute("control-class") || this.controlClass
                     }
 
+                    if (m.attributeName === "control-1-id") {
+                        this.control1Id = this.getAttribute("control-1-id") || this.control1Id
+                    }
+
                     if (m.attributeName === "shadow") {
                         this.shadow = this.getAttribute("shadow") !== null
                     }
@@ -175,7 +223,7 @@ export class InputSplitted extends HTMLElement {
             })
 
         this.#observer.observe(this, {
-            attributeFilter: ["value", "length", "control-class", "shadow"],
+            attributeFilter: ["value", "length", "control-class", "control-1-id", "shadow"],
             attributeOldValue: true,
             childList: true,
             subtree: true
