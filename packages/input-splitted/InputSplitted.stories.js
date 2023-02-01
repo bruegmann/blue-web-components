@@ -16,10 +16,10 @@ const story = {
     component: "blue-input-splitted",
     argTypes: {
         changeValue: { action: "changeValue", description: "Event that will be fired when the value changes." },
-        shadow: {
-            name: "shadow",
+        lightDom: {
+            name: "light-dom",
             type: { name: "boolean", required: false },
-            description: "If `true` the shadow DOM will be used.",
+            description: "If `true` the Shadow DOM will not be used but the Light DOM instead.",
             table: {
                 type: { summary: "boolean" },
                 defaultValue: { summary: false }
@@ -56,7 +56,7 @@ const story = {
             name: "control-class",
             type: { name: "string", required: false },
             description:
-                "Class name will passed to the input elements. Make sure `shadow` isn't enabled if you want to use this for styling.",
+                "Class name will passed to the input elements. Make sure `light-dom` is enabled if you want to use this for styling.",
             table: {
                 type: { summary: "string" },
                 defaultValue: { summary: "" }
@@ -69,7 +69,7 @@ const story = {
             name: "control-1-id",
             type: { name: "string", required: false },
             description:
-                'ID will passed to the first input element. Allows you to use `<label for="your-control-1-id">`. Only necessary when not using `shadow`.',
+                'ID will passed to the first input element. Allows you to use `<label for="your-control-1-id">`. Only necessary when using `light-dom`.',
             table: {
                 type: { summary: "string" },
                 defaultValue: { summary: "" }
@@ -86,6 +86,7 @@ const cssProperties = [
     "background-color",
     "border",
     "border-radius",
+    "box-shadow",
     "color",
     "margin",
     "padding",
@@ -129,7 +130,8 @@ export const Unstyled = ((args) => {
     return el
 }).bind({})
 Unstyled.args = {
-    length: 4
+    length: 4,
+    lightDom: false
 }
 
 export const Reactive = ((args) => {
@@ -226,20 +228,19 @@ export const StylingWithCSSVariables = (() => {
     wrapper.innerHTML = /*html*/ `
 <style>
     #${wrapper.id} blue-input-splitted {
-        --blue-input-splitted-border: 2px solid gray;
-        --blue-input-splitted-border-radius: 2em;
-        --blue-input-splitted-margin: 0 10px;
-        --blue-input-splitted-padding: 1rem;
+        --blue-input-splitted-border: 1px solid #dee2e6;
+        --blue-input-splitted-border-radius: .375rem;
+        --blue-input-splitted-padding: .375rem .75rem;
         --blue-input-splitted-text-align: center;
-        --blue-input-splitted-width: 2em;
-    }
 
-    #${wrapper.id} blue-input-splitted:hover {
-        --blue-input-splitted-background-color: #f2f2f2;
+        display: flex;
+        gap: 0.25rem;
     }
 
     #${wrapper.id} blue-input-splitted:focus {
-        --blue-input-splitted-background-color: #f4f4f4;
+        --blue-input-splitted-border: 1px solid #86b7fe;
+        --blue-input-splitted-box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+
     }
 
     /* If the input elements are bordered red, shadow is open. */
@@ -247,16 +248,9 @@ export const StylingWithCSSVariables = (() => {
         border-color: red !important;
     }
 </style>
+
+<blue-input-splitted length="4"></blue-input-splitted>
 `
-
-    const el = new InputSplitted()
-    el.setAttribute("shadow", "")
-    el.setAttribute("length", "4")
-
-    wrapper.appendChild(el)
-
-    wrapper.innerHTML += "\n"
-
     return wrapper
 }).bind({})
 
@@ -266,21 +260,21 @@ StylingWithCSSVariables.parameters = {
             state: "open"
         },
         description: {
-            story: "When `shadow` is enabled, you can still use CSS variables to style the input elements."
+            story: "Even if `light-dom` isn't enabled, you can still use CSS variables to style the input elements."
         }
     }
 }
 
-export const UseLabelWithoutShadow = (() => {
+export const UseLabel = (() => {
     const wrapper = document.createElement("div")
     wrapper.innerHTML = /*html*/ `
-    <label for="my-pin-input">Enter a PIN</label>
-    <blue-input-splitted control-1-id="my-pin-input" length="4"></blue-input-splitted>
+    <label for="my-pin-input-1">Enter a PIN</label>
+    <blue-input-splitted id="my-pin-input-1" length="4"></blue-input-splitted>
 `
     return wrapper
 }).bind({})
 
-UseLabelWithoutShadow.parameters = {
+UseLabel.parameters = {
     docs: {
         source: {
             state: "open"
@@ -291,16 +285,16 @@ UseLabelWithoutShadow.parameters = {
     }
 }
 
-export const UseLabelWithShadow = (() => {
+export const UseLabelWithoutShadow = (() => {
     const wrapper = document.createElement("div")
     wrapper.innerHTML = /*html*/ `
-    <label for="my-pin-input-1">Enter a PIN</label>
-    <blue-input-splitted shadow id="my-pin-input-1" length="4"></blue-input-splitted>
+    <label for="my-pin-input">Enter a PIN</label>
+    <blue-input-splitted light-dom control-1-id="my-pin-input" length="4"></blue-input-splitted>
 `
     return wrapper
 }).bind({})
 
-UseLabelWithShadow.parameters = {
+UseLabelWithoutShadow.parameters = {
     docs: {
         source: {
             state: "open"

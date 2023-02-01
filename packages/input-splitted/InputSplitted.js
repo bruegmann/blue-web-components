@@ -4,18 +4,18 @@ export class InputSplitted extends HTMLElement {
     #valueArray = []
     #refArray = []
 
-    #shadow = false
-    get shadow() {
-        return this.#shadow
+    #lightDom = false
+    get lightDom() {
+        return this.#lightDom
     }
-    set shadow(_shadow) {
-        this.#shadow = _shadow
+    set lightDom(_lightDom) {
+        this.#lightDom = _lightDom
 
-        if (this.shadow === true) {
+        if (this.lightDom === true) {
+            this.innerHTML = this.#styling
+        } else {
             if (!this.shadowRoot) this.attachShadow({ mode: "open", delegatesFocus: true })
             this.shadowRoot.innerHTML = this.#styling
-        } else {
-            this.innerHTML = this.#styling
         }
 
         this.#initDom()
@@ -52,7 +52,7 @@ export class InputSplitted extends HTMLElement {
             // Added length
 
             for (let j = 0; j < this.length; j++) {
-                if (!this.#refArray[j]) {
+                if (!this.#refArray[j] && this.didInit) {
                     this.#addInput(this.#refArray.length)
                 }
             }
@@ -100,6 +100,7 @@ export class InputSplitted extends HTMLElement {
         background-color: var(--blue-input-splitted-background-color, revert);
         border: var(--blue-input-splitted-border, revert);
         border-radius: var(--blue-input-splitted-border-radius, revert);
+        box-shadow: var(--blue-input-splitted-box-shadow, revert);
         color: var(--blue-input-splitted-color, revert);
         margin: var(--blue-input-splitted-margin, revert);
         padding: var(--blue-input-splitted-padding, revert);
@@ -108,23 +109,24 @@ export class InputSplitted extends HTMLElement {
     }
 </style>`
 
+    didInit = false
+
     constructor() {
         super()
 
-        // this.attachShadow({ mode: "open", delegatesFocus: true })
         this.onFocus = this.onFocus.bind(this)
     }
 
     connectedCallback() {
+        this.didInit = true
+        this.lightDom = this.getAttribute("light-dom") !== null
         this.#initDom()
 
         this.value = this.getAttribute("value") || this.value
         this.length = getLength(this)
         this.controlClass = this.getAttribute("control-class") || this.controlClass
         this.control1Id = this.getAttribute("control-1-id") || this.control1Id
-        this.shadow = this.getAttribute("shadow") !== null
 
-        // this.checked = getChecked(this)
         this.#observe()
     }
 
@@ -164,8 +166,11 @@ export class InputSplitted extends HTMLElement {
             this.value = this.#valueArray.join("")
         })
 
-        if (this.shadow) this.shadowRoot.appendChild(input)
-        else this.appendChild(input)
+        if (this.lightDom) {
+            this.appendChild(input)
+        } else {
+            this.shadowRoot.appendChild(input)
+        }
     }
 
     onFocus() {
@@ -176,13 +181,12 @@ export class InputSplitted extends HTMLElement {
         this.value = this.getAttribute("value") || ""
         this.length = getLength(this)
 
-        if (this.shadow) {
-            this.shadowRoot.innerHTML = this.#styling
-
-            this.shadowRoot.addEventListener("focus", this.onFocus)
-        } else {
+        if (this.lightDom) {
             this.innerHTML = this.#styling
             this.addEventListener("focus", this.onFocus)
+        } else {
+            this.shadowRoot.innerHTML = this.#styling
+            this.shadowRoot.addEventListener("focus", this.onFocus)
         }
 
         this.#valueArray = this.value.split("")
@@ -216,14 +220,14 @@ export class InputSplitted extends HTMLElement {
                         this.control1Id = this.getAttribute("control-1-id") || this.control1Id
                     }
 
-                    if (m.attributeName === "shadow") {
-                        this.shadow = this.getAttribute("shadow") !== null
+                    if (m.attributeName === "light-dom") {
+                        this.lightDom = this.getAttribute("light-dom") !== null
                     }
                 })
             })
 
         this.#observer.observe(this, {
-            attributeFilter: ["value", "length", "control-class", "control-1-id", "shadow"],
+            attributeFilter: ["value", "length", "control-class", "control-1-id", "light-dom"],
             attributeOldValue: true,
             childList: true,
             subtree: true
