@@ -1,3 +1,4 @@
+import { Theme } from "../blue-wc/Theme"
 import { Sidebar } from "./Sidebar"
 
 export default {
@@ -143,5 +144,59 @@ const CustomizedTemplate = (args) => {
 
 export const Customized = CustomizedTemplate.bind({})
 Customized.args = {
+    ["dynamic-size"]: ""
+}
+
+const ThemedTemplate = (args) => {
+    const theme = new Theme()
+    const wrapper = document.createElement("div")
+    theme.appendChild(wrapper)
+    wrapper.className = "site"
+
+    wrapper.appendChild(Template(args))
+
+    const style = document.createElement("style")
+    style.textContent = /*css*/ `
+        .site {
+            display: flex;
+            height: 400px;
+            border: 2px solid silver;
+            position: relative;
+        }
+
+        .site > *:first-child {
+            flex-shrink: 0;
+        }
+
+        .content {
+            padding: 1rem;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+    `
+    wrapper.appendChild(style)
+
+    const content = document.createElement("div")
+    content.className = "content"
+    content.innerHTML = /*html*/ `
+        <h4>Here could be app's content</h4>
+
+        <a href="https://github.com/bruegmann/blue-web-components" target="_blank">On GitHub</a>
+
+        <p>
+            Attribute <code>dynamic-size</code> for <code>&lt;blue-sidebar&gt;</code> automatically expands
+            or closed sidebar depending on window width. Updates when window resizes. Default breakpoint is
+            992 px but you can also set something else:<br />
+            <code>&lt;blue-sidebar dynamic-size="1200"&gt;&lt;/blue-sidebar&gt;</code>
+        </p>
+        <p></p>
+    `
+    wrapper.appendChild(content)
+
+    return theme
+}
+
+export const Themed = ThemedTemplate.bind({})
+Themed.args = {
     ["dynamic-size"]: ""
 }

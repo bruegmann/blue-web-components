@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="https://unpkg.com/blue-react@8.8.3/dist/style.min.css" />
+    </head>
+    <body>
+        <template id="blue-layout-template">
+            <div>
+                <div class="blue-wrapper"></div>
+                <div class="blue-layout"><slot /></div>
+
+                <div class="blue-status-circle blue-loading blue-status-loading">
+                    <div class="spinner-bounce-circle">
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div>
+
+                <div class="blue-status-circle blue-status-success">{this.props.statusIcons!.success}</div>
+
+                <div class="blue-status-circle blue-status-info">{this.props.statusIcons!.info}</div>
+
+                <div class="blue-status-circle blue-status-warning">{this.props.statusIcons!.warning}</div>
+
+                <div class="blue-status-circle blue-status-danger">{this.props.statusIcons!.danger}</div>
+
+                <div class="blue-status-alert alert">
+                    <button type="button" class="btn-close float-end mb-1" aria-label="Close"></button>
+                    <div class="alert-body"></div>
+                </div>
+            </div>
+        </template>
+
+        <script type="module" src="./Layout.js"></script>
+
+        <blue-layout>Hello</blue-layout>
+    </body>
+</html>
