@@ -24,7 +24,7 @@ export default {
             name: "dynamic-size",
             type: { name: "number", required: false },
             description:
-                "Set attribute to close the sidebar. Set empty to use default value 992. Or set a custom value.",
+                "Set attribute to close the sidebar automatically depending on the window width. Set an empty string to use default value of `992` or set a custom value.",
             table: {
                 type: { summary: "number" },
                 defaultValue: { summary: undefined }
