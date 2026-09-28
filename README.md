@@ -1,3 +1,5 @@
+> **All Web Components moved to [Blue monorepo](https://github.com/bruegmann/blue)**
+
 # Blue Web Components
 
 [![npm version](https://img.shields.io/npm/v/blue-web-components)](https://www.npmjs.com/package/blue-web-components)
